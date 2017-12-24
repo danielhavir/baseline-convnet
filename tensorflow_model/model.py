@@ -6,7 +6,7 @@ def placeholders(input_shape, num_classes):
 	"""
 	Create placeholders.
 
-	:param image_shape: Shape of the input data
+	:param input_shape: Shape of the input data
 	:param num_classes: Number of classes
 	: return: Tensors placeholders
 	"""
