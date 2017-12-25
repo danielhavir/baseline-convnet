@@ -20,7 +20,7 @@ def placeholders(input_shape, num_classes):
 	return (inputs, targets, is_training, keep_prob, lr)
 
 
-def batch_norm(layer, is_training, epsilon=1e-4):
+def batch_norm(layer, is_training, epsilon=1e-4, decay=0.99):
 	"""
 	Create a convolutional layer with the given layer as input.
 
@@ -28,7 +28,9 @@ def batch_norm(layer, is_training, epsilon=1e-4):
 	:param is_training: bool or Tensor
 		Indicates whether or not the network is currently training, which tells the batch normalization
 		layer whether or not it should update or use its population statistics.
-	:returns Normalized tensor
+	:param epsilon: Batch normalization parameter. 0.0001 by default.
+	:param decay: Decay for updating population mean and variance. 0.99 by default.
+	:returns: Normalized tensor
 	"""
 
 	# Check if we normalize convolutional layer
@@ -39,16 +41,15 @@ def batch_norm(layer, is_training, epsilon=1e-4):
 		num_units = layer.get_shape().as_list()[1]
 		moments = [0]
 
-	gamma = tf.Variable(tf.ones([num_units]))
-	beta = tf.Variable(tf.zeros([num_units]))
+	gamma = tf.Variable(tf.ones([num_units]), name='gamma')
+	beta = tf.Variable(tf.zeros([num_units]), name='beta')
 
-	pop_mean = tf.Variable( tf.ones([num_units]), trainable=False )
-	pop_variance = tf.Variable( tf.zeros([num_units]), trainable=False )
+	pop_mean = tf.Variable( tf.ones([num_units]), name='pop_mean',  trainable=False )
+	pop_variance = tf.Variable( tf.zeros([num_units]), name='pop_variance', trainable=False )
 
 	def batch_norm_training():
 		batch_mean, batch_variance = tf.nn.moments(layer, moments)
 
-		decay = 0.99
 		train_mean = tf.assign(pop_mean, pop_mean * decay + batch_mean * (1 - decay))
 		train_variance = tf.assign(pop_variance, pop_variance * decay + batch_variance * (1 - decay))
 
@@ -70,6 +71,8 @@ def conv2d(inputs, conv_num_outputs, conv_ksize, conv_strides,
 	:param conv_ksize: kernal size 2-D Tuple for the convolutional layer
 	:param conv_strides: Stride 2-D Tuple for convolution
 	:param is_training: Boolean passed into Batch Norm to control dependencies
+	:param activation_fn: Activation function. Relu by default
+	:param use_bias: Boolean whether to use bias
 	: return: A tensor that represents convolution of inputs
 	"""
 
@@ -125,6 +128,7 @@ def fully_connected(inputs, num_outputs, activation_fn=None):
 	Apply a fully connected layer to x_tensor using weight and bias
 	:param inputs: A 2-D tensor where the first dimension is batch size.
 	:param num_outputs: The number of output that the new tensor should be.
+	:param activation_fn: Activation function. None by default.
 	: return: A 2-D tensor where the second dimension is num_outputs.
 	"""
 
@@ -142,9 +146,10 @@ def fully_connected(inputs, num_outputs, activation_fn=None):
 def baseline_model(inputs, num_classes, keep_prob, is_training):
 	"""
 	Build the feed forward convolutional neural network model
-	:param x: Placeholder tensor that holds image data.
+	:param inputs: Placeholder tensor that holds image data.
 	:param num_classes: Number of classes.
 	:param keep_prob: Placeholder tensor that hold dropout keep probability.
+	:param is_training: Boolean passed into Batch Norm to control dependencies.
 	: return: Tensor that represents logits
 	"""
 
@@ -157,7 +162,7 @@ def baseline_model(inputs, num_classes, keep_prob, is_training):
 
 	flat = flatten(pool3)
 
-	drop1 = tf.nn.dropout(flat, keep_prob*(3/2))
+	drop1 = tf.nn.dropout(flat, tf.minimum(1., keep_prob * (3 / 2)))
 	fc1 = fully_connected(drop1, 256, activation_fn=tf.nn.relu)
 	drop2 = tf.nn.dropout(fc1, keep_prob)
 

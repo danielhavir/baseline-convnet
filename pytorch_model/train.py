@@ -31,7 +31,7 @@ class BaselineConvnet:
 
 		self.criterion = nn.CrossEntropyLoss()
 		self.optimizer = optim.Adam(self.net.parameters(), lr=learning_rate)
-		print(8*'#', 'Model built'.upper(), 8*'#')
+		print(8*'#', 'PyTorch Model built'.upper(), 8*'#')
 
 	def run(self, epochs, classes):
 		print(8*'#', 'Run started'.upper(), 8*'#')

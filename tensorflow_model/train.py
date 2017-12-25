@@ -42,7 +42,7 @@ def run(epochs, batch_size, learning_rate, keep_probability):
 	print(8*'#', 'Run started'.upper(), 8*'#')
 	(inputs, targets, is_training, keep_prob, lr,
 	 logits, loss, optimizer, accuracy) = tf_model.baseline_convnet((32, 32, 3), 10)
-	print(8*'#', 'Model built'.upper(), 8*'#')
+	print(8*'#', 'TensorFlow Model built'.upper(), 8*'#')
 
 	with tf.Session() as sess:
 		# Initializing the variables
