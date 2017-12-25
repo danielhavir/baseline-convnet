@@ -7,3 +7,6 @@ Experiments ran on [CIFAR](http://www.cs.toronto.edu/~kriz/cifar.html)
 
 
 ## [TensorFlow Model](tensorflow_model/README.md)
+
+
+## [PyTorch Model](pytorch_model/README.md)

@@ -157,7 +157,7 @@ def baseline_model(inputs, num_classes, keep_prob, is_training):
 
 	flat = flatten(pool3)
 
-	drop1 = tf.nn.dropout(flat, keep_prob*2)
+	drop1 = tf.nn.dropout(flat, keep_prob*(3/2))
 	fc1 = fully_connected(drop1, 256, activation_fn=tf.nn.relu)
 	drop2 = tf.nn.dropout(fc1, keep_prob)
 

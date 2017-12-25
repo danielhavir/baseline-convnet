@@ -23,7 +23,7 @@ def gen_batches(features, labels, batch_size: int):
 		yield features[start:end], labels[start:end]
 
 
-def cifar_loader(train: True, batch_id=None):
+def cifar_loader(train: bool, batch_id=None):
 	if train:
 		# Cifar comes with 5 data_batches
 		file_path = 'data_batch_{}'.format(batch_id)
@@ -68,7 +68,7 @@ def run(epochs, batch_size, learning_rate, keep_probability):
 					_, batch_loss, batch_accuracy = sess.run([optimizer, loss, accuracy], feed_dict=feed_dict)
 					train_loss += batch_loss
 					train_accuracy += batch_accuracy
-					print('Epoch {:>2}, Batch {}, Loss {}, Accuracy {}'.format(epoch + 1, i, train_loss/i, train_accuracy/i))
+					print('Epoch {}, Batch {}, Loss {}, Accuracy {}'.format(epoch + 1, i, train_loss/i, train_accuracy/i))
 					i+=1
 
 			print('Evaluating..')
@@ -84,7 +84,7 @@ def run(epochs, batch_size, learning_rate, keep_probability):
 				batch_loss, batch_accuracy = sess.run([loss, accuracy], feed_dict=feed_dict)
 				test_loss += batch_loss
 				test_accuracy += batch_accuracy
-			print('Epoch {:>2}, Test Loss {}, Test Accuracy {}'.format( epoch+1, test_loss/i, test_accuracy/i))
+			print('Epoch {}, Test Loss {}, Test Accuracy {}'.format(epoch+1, test_loss/i, test_accuracy/i))
 
 		print(8*'#', 'Finished training'.upper(), 8*'#')
 

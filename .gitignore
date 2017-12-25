@@ -13,3 +13,4 @@ __pycache__/
 data/
 tensorflow_model/checkpoints/
 tensorflow_model/logs/
+pytorch_model/checkpoints/
