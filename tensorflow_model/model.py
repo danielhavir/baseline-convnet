@@ -180,9 +180,7 @@ def baseline_convnet(input_shape, num_classes):
 	logits = baseline_model(inputs, num_classes, keep_prob, is_training)
 
 	# Loss and optimizer
-	loss = tf.reduce_mean(
-				tf.nn.softmax_cross_entropy_with_logits(
-					logits=logits, labels=targets) )
+	loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=targets))
 	optimizer = tf.train.AdamOptimizer().minimize(loss)
 
 	# Accuracy
